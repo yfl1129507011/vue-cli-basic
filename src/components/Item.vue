@@ -3,9 +3,15 @@
       <label>
           <input type="checkbox" :checked="todo.done" @change="handleCheck(todo.id)" />
           <!-- <input type="checkbox" v-model="todo.done" /> -->   <!-- 可以实现功能，但不建议修改props数据 -->
-          <span>{{todo.title}}</span>
+          <span v-show="!todo.isEdit">{{todo.title}}</span>
+          <input type="text"
+           v-show="todo.isEdit"
+           :value="todo.title" 
+           @blur="handleBlur(todo, $event)"
+           ref="inputTitle" />
       </label>
       <button class="btn btn-danger" @click="del(todo.id)">删除</button>
+      <button v-show="!todo.isEdit" class="btn btn-edit" @click="edit(todo)">编辑</button>
   </li>
 </template>
 
@@ -27,6 +33,24 @@ export default {
                 // this.$bus.$emit('delTodo', id)
                 pubsub.publish('delTodo', id)
             }
+        },
+        edit(todo) {
+          if(todo.hasOwnProperty('isEdit')) {
+            todo.isEdit = true
+          } else {
+            this.$set(todo, 'isEdit' ,true)
+          }
+          this.$nextTick(function(){
+            this.$refs.inputTitle.focus()
+          })
+        },
+        handleBlur(todo, e) {
+          todo.isEdit = false
+          if(!e.target.value.trim()) {
+            alert('输入不能为空')
+            return
+          }
+          this.$bus.$emit('updateTodo', todo.id, e.target.value)
         }
     }
 }

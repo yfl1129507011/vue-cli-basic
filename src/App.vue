@@ -16,6 +16,7 @@ import pubsub from 'pubsub-js'
 import MyHeader from "./components/MyHeader.vue";
 import List from "./components/List.vue";
 import MyFooter from "./components/MyFooter.vue";
+import { title } from 'process';
 
 export default {
     name: "App",
@@ -34,6 +35,13 @@ export default {
             this.todos.forEach((todo)=>{
                 if(todo.id === id) {
                     todo.done = !todo.done
+                }
+            })
+        },
+        updateTodo(id, title) {
+            this.todos.forEach((todo)=>{
+                if(todo.id === id) {
+                    todo.title = title
                 }
             })
         },
@@ -67,11 +75,14 @@ export default {
         // this.$bus.$on('delTodo', this.delTodo)
         // 订阅消息
         this.pid = pubsub.subscribe('delTodo', this.delTodo)
+
+        this.$bus.$on('updateTodo', this.updateTodo)
     },
     beforeDestroy(){
         this.$bus.$off('checkTodo')
         // this.$bus.$off('delTodo')
         pubsub.unsubscribe(this.pid)
+        this.$bus.$off('updateTodo')
     }
 }
 </script>
@@ -99,6 +110,13 @@ body {
   color: #fff;
   background-color: #da4f49;
   border: 1px solid #bd362f;
+}
+
+.btn-edit {
+  color: #fff;
+  background-color: skyblue;
+  border: 1px solid skyblue;
+  margin-right: 5px;
 }
 
 .btn-danger:hover {
