@@ -280,3 +280,92 @@
 1. 语法：`this.$nextTick(回调函数)`
 2. 作用：在下一次DOM更新结束后执行其指定的回调
 3. 什么时候用：当改变数据后，要基于更新后的新DOM进行某些操作时，要在nextTick所指定的回调函数中执行
+
+## Vue封装的过度与动画
+1. 作用：在插入、更新或移除DOM元素时，在合适的时候给元素添加样式类名
+2. 写法：
+    ```
+    <template>
+        <div>
+            <button @click="isShow = !isShow">
+                显示/隐藏
+            </button>
+            <!--transition 只能包裹一个元素而transition-group可以包含多个元素-->
+            <transition-group name="hello" appear>
+                <h1 v-show="!isShow" key="1">你好!</h1>
+                <h1 v-show="isShow" key="2">FenLon</h1>
+            </transition-group>
+        </div>
+    </template>
+
+    <script>
+        export default {
+            name: "Test2",
+            data() {
+                return {
+                    isShow: true
+                }
+            },
+        }
+    </script>
+
+    <style>
+        h1{
+            background: orange;
+        }
+        /*进入的起点，离开的终点*/
+        .hello-enter,
+        .hello-leave-to{
+            transform: translateX(-100%);
+        }
+        /*进入的过程，离开的过程*/
+        .hello-enter-active,
+        .hello-leave-active{
+            transition: linear .5s;
+        }
+        /*进入的终点,离开的起点*/
+        .hello-enter-to,
+        .hello-leave{
+            transform: translateX(0);
+        }
+    </style>
+    ```
+3. 使用第三方动画库
+    - 下载`nmp install animate.css`
+    - 使用
+        ```
+        <template>
+            <div>
+                <button @click="isShow = !isShow">
+                    显示/隐藏
+                </button>
+                <transition-group 
+                name="animate__animated animate__bounce" 
+                appear
+                enter-active-class="animate__swing"
+                leave-active-class="animate__backOutUp"
+                >
+                    <h1 v-show="isShow" key="1">你好!</h1>
+                    <h1 v-show="isShow" key="2">FenLon</h1>
+                </transition-group>
+            </div>
+        </template>
+
+        <script>
+        import 'animate.css'
+        export default {
+            name: "Test3",
+            data() {
+                return {
+                    isShow: true
+                }
+            },
+        }
+        </script>
+
+        <style>
+        h1{
+            background: orange;
+        }
+        </style>
+        ```

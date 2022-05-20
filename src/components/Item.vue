@@ -1,5 +1,6 @@
 <template>
-  <li>
+  <!-- <transition name="todo" appear> -->
+    <li>
       <label>
           <input type="checkbox" :checked="todo.done" @change="handleCheck(todo.id)" />
           <!-- <input type="checkbox" v-model="todo.done" /> -->   <!-- 可以实现功能，但不建议修改props数据 -->
@@ -12,7 +13,8 @@
       </label>
       <button class="btn btn-danger" @click="del(todo.id)">删除</button>
       <button v-show="!todo.isEdit" class="btn btn-edit" @click="edit(todo)">编辑</button>
-  </li>
+    </li>
+  <!-- </transition> -->
 </template>
 
 <script>
