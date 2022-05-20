@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
+
 export default {
     name:'Item',
     // 声明接收todo对象
@@ -22,7 +24,8 @@ export default {
         del(id) {
             if(confirm('确认删除吗？')) {
                 console.log(id)
-                this.$bus.$emit('delTodo', id)
+                // this.$bus.$emit('delTodo', id)
+                pubsub.publish('delTodo', id)
             }
         }
     }

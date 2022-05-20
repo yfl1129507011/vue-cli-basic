@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
+
 import MyHeader from "./components/MyHeader.vue";
 import List from "./components/List.vue";
 import MyFooter from "./components/MyFooter.vue";
@@ -35,7 +37,7 @@ export default {
                 }
             })
         },
-        delTodo(id) {
+        delTodo(_, id) {
             this.todos = this.todos.filter((todo) => {
                 return todo.id !== id
             })
@@ -62,11 +64,14 @@ export default {
     mounted(){
         // 给接收数据的组件绑定事件
         this.$bus.$on('checkTodo', this.checkTodo)
-        this.$bus.$on('delTodo', this.delTodo)
+        // this.$bus.$on('delTodo', this.delTodo)
+        // 订阅消息
+        this.pid = pubsub.subscribe('delTodo', this.delTodo)
     },
     beforeDestroy(){
         this.$bus.$off('checkTodo')
-        this.$bus.$off('delTodo')
+        // this.$bus.$off('delTodo')
+        pubsub.unsubscribe(this.pid)
     }
 }
 </script>
